@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SafeCampus</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Inter',sans-serif;
+    }
+
+    body{
+      background:#f5f7fb;
+      color:#1e293b;
+    }
+
+    nav{
+      width:100%;
+      padding:20px 8%;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background:white;
+      box-shadow:0 4px 20px rgba(0,0,0,0.05);
+      position:sticky;
+      top:0;
+      z-index:1000;
+    }
+
+    .logo{
+      font-size:28px;
+      font-weight:800;
+      color:#2563eb;
+    }
+
+    .nav-links{
+      display:flex;
+      gap:30px;
+      align-items:center;
+    }
+
+    .nav-links a{
+      text-decoration:none;
+      color:#334155;
+      font-weight:500;
+      transition:0.3s;
+    }
+
+    .nav-links a:hover{
+      color:#2563eb;
+    }
+
+    .login-btn{
+      background:#2563eb;
+      color:white;
+      border:none;
+      padding:12px 24px;
+      border-radius:10px;
+      font-weight:600;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .login-btn:hover{
+      background:#1d4ed8;
+      transform:translateY(-2px);
+    }
+
+    .hero{
+      min-height:90vh;
+      padding:80px 8%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:60px;
+      flex-wrap:wrap;
+    }
+
+    .hero-text{
+      flex:1;
+      min-width:300px;
+    }
+
+    .hero-text h1{
+      font-size:64px;
+      line-height:1.1;
+      margin-bottom:24px;
+      font-weight:800;
+    }
+
+    .hero-text h1 span{
+      color:#2563eb;
+    }
+
+    .hero-text p{
+      font-size:18px;
+      color:#475569;
+      line-height:1.8;
+      margin-bottom:30px;
+      max-width:650px;
+    }
+
+    .primary-btn{
+      background:#2563eb;
+      color:white;
+      border:none;
+      padding:16px 30px;
+      border-radius:12px;
+      font-size:16px;
+      font-weight:600;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .primary-btn:hover{
+      transform:translateY(-3px);
+      background:#1d4ed8;
+    }
+
+    .hero img{
+      width:500px;
+      max-width:100%;
+      border-radius:24px;
+      box-shadow:0 15px 40px rgba(0,0,0,0.15);
+    }
+
+    .section{
+      padding:80px 8%;
+    }
+
+    .section-title{
+      text-align:center;
+      margin-bottom:50px;
+    }
+
+    .section-title h2{
+      font-size:42px;
+      color:#0f172a;
+    }
+
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:30px;
+    }
+
+    .card{
+      background:white;
+      border-radius:20px;
+      overflow:hidden;
+      box-shadow:0 10px 30px rgba(0,0,0,0.06);
+      transition:0.3s;
+    }
+
+    .card:hover{
+      transform:translateY(-8px);
+    }
+
+    .card img{
+      width:100%;
+      height:220px;
+      object-fit:cover;
+    }
+
+    .card-content{
+      padding:24px;
+    }
+
+    .card-content h3{
+      margin-bottom:12px;
+      font-size:24px;
+      color:#0f172a;
+    }
+
+    .card-content p{
+      color:#64748b;
+      line-height:1.7;
+    }
+
+    /* LOGIN MODAL */
+
+    .modal{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.55);
+      display:none;
+      justify-content:center;
+      align-items:center;
+      z-index:2000;
+      padding:20px;
+    }
+
+    .modal.active{
+      display:flex;
+    }
+
+    .modal-box{
+      width:100%;
+      max-width:420px;
+      background:white;
+      border-radius:24px;
+      padding:35px;
+      position:relative;
+      animation:popup 0.3s ease;
+    }
+
+    @keyframes popup{
+      from{
+        transform:scale(0.8);
+        opacity:0;
+      }
+      to{
+        transform:scale(1);
+        opacity:1;
+      }
+    }
+
+    .close-btn{
+      position:absolute;
+      top:18px;
+      right:18px;
+      background:#f1f5f9;
+      border:none;
+      width:36px;
+      height:36px;
+      border-radius:50%;
+      cursor:pointer;
+      font-size:18px;
+    }
+
+    .modal-box h2{
+      font-size:32px;
+      margin-bottom:10px;
+      color:#0f172a;
+    }
+
+    .modal-box p{
+      color:#64748b;
+      margin-bottom:25px;
+    }
+
+    .form-group{
+      margin-bottom:18px;
+    }
+
+    .form-group input{
+      width:100%;
+      padding:15px;
+      border:1px solid #cbd5e1;
+      border-radius:12px;
+      font-size:15px;
+      outline:none;
+    }
+
+    .form-group input:focus{
+      border-color:#2563eb;
+    }
+
+    .submit-btn{
+      width:100%;
+      padding:15px;
+      background:#2563eb;
+      border:none;
+      color:white;
+      border-radius:12px;
+      font-size:16px;
+      font-weight:600;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .submit-btn:hover{
+      background:#1d4ed8;
+    }
+
+    .verification-box{
+      margin-top:18px;
+      background:#eff6ff;
+      padding:15px;
+      border-radius:12px;
+      color:#1d4ed8;
+      font-size:14px;
+      display:none;
+    }
+
+    /* FOOTER */
+
+    footer{
+      background:#0f172a;
+      color:white;
+      margin-top:80px;
+      padding:80px 8% 30px;
+    }
+
+    .footer-container{
+      display:grid;
+      grid-template-columns:2fr 1fr 1fr 1.5fr;
+      gap:40px;
+      margin-bottom:50px;
+    }
+
+    .footer-brand h2{
+      font-size:38px;
+      margin-bottom:20px;
+      color:#60a5fa;
+    }
+
+    .footer-brand p{
+      color:#cbd5e1;
+      line-height:1.8;
+      margin-bottom:25px;
+      max-width:400px;
+    }
+
+    .footer-socials{
+      display:flex;
+      gap:15px;
+    }
+
+    .social{
+      width:45px;
+      height:45px;
+      background:#1e293b;
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:0.3s;
+      cursor:pointer;
+      font-size:18px;
+    }
+
+    .social:hover{
+      background:#2563eb;
+      transform:translateY(-4px);
+    }
+
+    .footer-links h3,
+    .footer-contact h3{
+      margin-bottom:22px;
+      font-size:22px;
+    }
+
+    .footer-links a{
+      display:block;
+      text-decoration:none;
+      color:#cbd5e1;
+      margin-bottom:14px;
+      transition:0.3s;
+    }
+
+    .footer-links a:hover{
+      color:#60a5fa;
+      padding-left:6px;
+    }
+
+    .footer-contact p{
+      color:#cbd5e1;
+      margin-bottom:14px;
+      line-height:1.7;
+    }
+
+    .footer-bottom{
+      border-top:1px solid rgba(255,255,255,0.1);
+      padding-top:25px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:15px;
+    }
+
+    .footer-bottom p{
+      color:#94a3b8;
+      font-size:14px;
+    }
+
+    @media(max-width:900px){
+
+      .hero{
+        text-align:center;
+        justify-content:center;
+      }
+
+      .hero-text h1{
+        font-size:48px;
+      }
+
+      .footer-container{
+        grid-template-columns:1fr;
+      }
+
+      nav{
+        flex-direction:column;
+        gap:20px;
+      }
+
+      .nav-links{
+        flex-wrap:wrap;
+        justify-content:center;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav>
+
+  <div class="logo">SafeCampus</div>
+
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="complaint.html">Complaint Form</a>
+    <a href="analytics.html">Analytics</a>
+    <a href="contact.html">Contact Us</a>
+  </div>
+
+  <button class="login-btn" onclick="openModal()">
+    Login / Signup
+  </button>
+
+</nav>
+
+<!-- HERO -->
+
+<section class="hero">
+
+  <div class="hero-text">
+
+    <h1>
+      Smart <span>Campus Reporting</span> System
+    </h1>
+
+    <p>
+      SafeCampus helps students and staff report complaints anonymously,
+      monitor campus issues, and improve safety through a secure reporting platform.
+      Users can securely register, verify accounts, submit complaints,
+      and track reports through a modern smart-campus interface.
+    </p>
+
+    <a href="complaint.html">
+      <button class="primary-btn">
+        Report Complaint
+      </button>
+    </a>
+
+  </div>
+
+  <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1200&auto=format&fit=crop">
+
+</section>
+
+<!-- FEATURES -->
+
+<section class="section">
+
+  <div class="section-title">
+    <h2>Features</h2>
+  </div>
+
+  <div class="cards">
+
+    <div class="card">
+
+      <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop">
+
+      <div class="card-content">
+
+        <h3>Anonymous Reporting</h3>
+
+        <p>
+          Students and staff members can submit complaints securely without revealing their identity.
+        </p>
+
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1200&auto=format&fit=crop">
+
+      <div class="card-content">
+
+        <h3>Admin Dashboard</h3>
+
+        <p>
+          Administrators can monitor complaints, manage campus issues, and review reports efficiently.
+        </p>
+
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1200&auto=format&fit=crop">
+
+      <div class="card-content">
+
+        <h3>Complaint Tracking</h3>
+
+        <p>
+          Users can track report progress and monitor the resolution status in real-time.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- LOGIN MODAL -->
+
+<div class="modal" id="loginModal">
+
+  <div class="modal-box">
+
+    <button class="close-btn" onclick="closeModal()">✕</button>
+
+    <h2>Welcome Back</h2>
+
+    <p>
+      Login or create your SafeCampus account.
+    </p>
+
+    <div class="form-group">
+      <input type="text" id="name" placeholder="Full Name">
+    </div>
+
+    <div class="form-group">
+      <input type="email" id="email" placeholder="University Email">
+    </div>
+
+    <div class="form-group">
+      <input type="password" id="password" placeholder="Password">
+    </div>
+
+    <button class="submit-btn" onclick="registerUser()">
+      Register & Verify
+    </button>
+
+    <div class="verification-box" id="verificationBox">
+      ✅ Verification email sent successfully.<br><br>
+      Your SafeCampus account is now active and logged in.
+    </div>
+
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+
+<footer>
+
+  <div class="footer-container">
+
+    <div class="footer-brand">
+
+      <h2>SafeCampus</h2>
+
+      <p>
+        A modern campus reporting platform designed to improve
+        student safety, anonymous complaint handling,
+        and issue resolution through digital transformation.
+      </p>
+
+      <div class="footer-socials">
+
+        <div class="social">🌐</div>
+        <div class="social">📧</div>
+        <div class="social">📱</div>
+        <div class="social">💬</div>
+
+      </div>
+
+    </div>
+
+    <div class="footer-links">
+
+      <h3>Quick Links</h3>
+
+      <a href="index.html">Home</a>
+      <a href="complaint.html">Complaint Form</a>
+      <a href="analytics.html">Analytics</a>
+      <a href="contact.html">Contact Us</a>
+
+    </div>
+
+    <div class="footer-links">
+
+      <h3>Features</h3>
+
+      <a href="#">Anonymous Reporting</a>
+      <a href="#">Admin Dashboard</a>
+      <a href="#">Complaint Tracking</a>
+      <a href="#">Campus Analytics</a>
+
+    </div>
+
+    <div class="footer-contact">
+
+      <h3>Contact Information</h3>
+
+      <p>
+        📍 Iqra University Campus
+      </p>
+
+      <p>
+        📧 support@safecampus.edu
+      </p>
+
+      <p>
+        📞 +92 300 1234567
+      </p>
+
+      <p>
+        🕒 Monday - Friday | 9 AM - 5 PM
+      </p>
+
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+
+    <p>
+      © 2026 SafeCampus — All Rights Reserved
+    </p>
+
+    <p>
+      Built for Secure & Smart Campus Management
+    </p>
+
+  </div>
+
+</footer>
+
+<script>
+
+  function openModal(){
+    document.getElementById("loginModal").classList.add("active");
+  }
+
+  function closeModal(){
+    document.getElementById("loginModal").classList.remove("active");
+  }
+
+  function registerUser(){
+
+    let email = document.getElementById("email").value;
+
+    if(email === ""){
+      alert("Please enter your email");
+      return;
+    }
+
+    document.getElementById("verificationBox").style.display = "block";
+
+    document.querySelector(".login-btn").innerText = "Logged In ✓";
+
+  }
+
+  window.onclick = function(e){
+
+    let modal = document.getElementById("loginModal");
+
+    if(e.target === modal){
+      closeModal();
+    }
+
+  }
+
+</script>
+
+</body>
+</html>
