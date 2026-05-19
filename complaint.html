@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SafeCampus - Complaint Form</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Inter',sans-serif;
+    }
+
+    body{
+      background:#f4f7fb;
+      color:#1e293b;
+    }
+
+    nav{
+      width:100%;
+      padding:20px 8%;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background:white;
+      box-shadow:0 4px 20px rgba(0,0,0,0.05);
+      position:sticky;
+      top:0;
+      z-index:1000;
+    }
+
+    .logo{
+      font-size:28px;
+      font-weight:800;
+      color:#2563eb;
+    }
+
+    .nav-links{
+      display:flex;
+      gap:30px;
+      align-items:center;
+    }
+
+    .nav-links a{
+      text-decoration:none;
+      color:#334155;
+      font-weight:500;
+      transition:0.3s;
+    }
+
+    .nav-links a:hover{
+      color:#2563eb;
+    }
+
+    .hero{
+      padding:70px 8% 30px;
+      text-align:center;
+    }
+
+    .hero h1{
+      font-size:54px;
+      margin-bottom:20px;
+      font-weight:800;
+      color:#0f172a;
+    }
+
+    .hero h1 span{
+      color:#2563eb;
+    }
+
+    .hero p{
+      max-width:800px;
+      margin:auto;
+      line-height:1.8;
+      color:#64748b;
+      font-size:17px;
+    }
+
+    .container{
+      width:100%;
+      padding:40px 8% 80px;
+      display:grid;
+      grid-template-columns:1fr 380px;
+      gap:35px;
+      align-items:start;
+    }
+
+    .form-card{
+      background:white;
+      border-radius:24px;
+      padding:40px;
+      box-shadow:0 10px 35px rgba(0,0,0,0.06);
+    }
+
+    .form-card h2{
+      font-size:36px;
+      margin-bottom:12px;
+      color:#0f172a;
+    }
+
+    .form-card p{
+      color:#64748b;
+      margin-bottom:30px;
+      line-height:1.7;
+    }
+
+    .form-group{
+      margin-bottom:22px;
+    }
+
+    .form-group label{
+      display:block;
+      margin-bottom:10px;
+      font-weight:600;
+      color:#0f172a;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea{
+      width:100%;
+      padding:15px;
+      border-radius:14px;
+      border:1px solid #cbd5e1;
+      outline:none;
+      font-size:15px;
+      transition:0.3s;
+      background:white;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus{
+      border-color:#2563eb;
+      box-shadow:0 0 0 4px rgba(37,99,235,0.1);
+    }
+
+    textarea{
+      min-height:150px;
+      resize:none;
+    }
+
+    .checkbox-group{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:25px;
+      background:#eff6ff;
+      padding:16px;
+      border-radius:14px;
+    }
+
+    .checkbox-group input{
+      width:18px;
+      height:18px;
+    }
+
+    .submit-btn{
+      width:100%;
+      padding:17px;
+      border:none;
+      border-radius:14px;
+      background:#2563eb;
+      color:white;
+      font-size:16px;
+      font-weight:700;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .submit-btn:hover{
+      background:#1d4ed8;
+      transform:translateY(-2px);
+    }
+
+    .success-message{
+      display:none;
+      margin-top:25px;
+      background:#dcfce7;
+      color:#166534;
+      padding:18px;
+      border-radius:14px;
+      line-height:1.7;
+      font-weight:500;
+    }
+
+    .side-panel{
+      display:flex;
+      flex-direction:column;
+      gap:25px;
+    }
+
+    .info-card{
+      background:white;
+      border-radius:24px;
+      padding:30px;
+      box-shadow:0 10px 35px rgba(0,0,0,0.06);
+    }
+
+    .info-card h3{
+      margin-bottom:18px;
+      font-size:24px;
+      color:#0f172a;
+    }
+
+    .info-card p{
+      color:#64748b;
+      line-height:1.8;
+      margin-bottom:15px;
+    }
+
+    .info-image{
+      width:100%;
+      border-radius:18px;
+      margin-top:20px;
+      height:220px;
+      object-fit:cover;
+    }
+
+    .steps{
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      margin-top:20px;
+    }
+
+    .step{
+      display:flex;
+      gap:15px;
+      align-items:flex-start;
+    }
+
+    .step-number{
+      width:38px;
+      height:38px;
+      border-radius:50%;
+      background:#2563eb;
+      color:white;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      flex-shrink:0;
+    }
+
+    .step p{
+      color:#64748b;
+      line-height:1.6;
+    }
+
+    footer{
+      background:#0f172a;
+      color:white;
+      text-align:center;
+      padding:25px;
+      font-size:14px;
+    }
+
+    @media(max-width:950px){
+
+      .container{
+        grid-template-columns:1fr;
+      }
+
+      .hero h1{
+        font-size:42px;
+      }
+
+      nav{
+        flex-direction:column;
+        gap:18px;
+      }
+
+      .nav-links{
+        flex-wrap:wrap;
+        justify-content:center;
+      }
+
+    }
+
+    @media(max-width:600px){
+
+      .form-card,
+      .info-card{
+        padding:24px;
+      }
+
+      .hero h1{
+        font-size:34px;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+
+  <nav>
+
+    <div class="logo">SafeCampus</div>
+
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="complaint.html" data-protect="auth">Complaint Form</a>
+      <a href="analytics.html">Analytics</a>
+      <a href="contact.html" data-protect="auth">Contact Us</a>
+    </div>
+
+  </nav>
+
+  <!-- HERO -->
+
+  <section class="hero">
+
+    <h1>
+      Submit a <span>Complaint</span>
+    </h1>
+
+    <p>
+      SafeCampus provides a secure and confidential platform where students
+      and staff can report campus-related concerns anonymously or publicly.
+      Your complaint helps create a safer and smarter campus environment.
+    </p>
+
+  </section>
+
+  <!-- MAIN CONTENT -->
+
+  <section class="container">
+
+    <!-- FORM -->
+
+    <div class="form-card">
+
+      <h2>Complaint Form</h2>
+
+      <p>
+        Fill out the information below carefully. Your report will
+        be securely submitted to the SafeCampus administration panel.
+      </p>
+
+      <div class="form-group">
+        <label>Full Name</label>
+        <input id="fullName" type="text" placeholder="Enter your full name">
+      </div>
+
+      <div class="form-group">
+        <label>Email Address</label>
+        <input id="emailInput" type="email" placeholder="Enter your email address">
+      </div>
+
+      <div class="form-group">
+        <label>Complaint Category</label>
+
+        <select id="categorySelect" onchange="toggleCustomCategory()">
+
+          <option value="">Select a category</option>
+
+          <option>Harassment</option>
+
+          <option>Campus Security</option>
+
+          <option>Teacher Complaint</option>
+
+          <option>Student Misconduct</option>
+
+          <option>Cyber Bullying</option>
+
+          <option>Hostel Issue</option>
+
+          <option>Transport Issue</option>
+
+          <option>Cleaning & Hygiene</option>
+
+          <option>Violence / Threat</option>
+
+          <option>Internet / IT Issue</option>
+
+          <option>Other</option>
+
+        </select>
+      </div>
+
+      <div class="form-group" id="customCategoryBox" style="display:none;">
+
+        <label>Enter Custom Category</label>
+
+        <input id="customCategoryInput" type="text" placeholder="Write your custom complaint category">
+
+      </div>
+
+      <div class="form-group">
+        <label>Complaint Subject</label>
+        <input id="subjectInput" type="text" placeholder="Enter complaint title">
+      </div>
+
+      <div class="form-group">
+        <label>Complaint Details</label>
+
+        <textarea id="detailsTextarea" placeholder="Describe your complaint in detail..."></textarea>
+      </div>
+
+      <div class="checkbox-group">
+
+        <input type="checkbox" id="anonymous">
+
+        <label for="anonymous">
+          Submit this complaint anonymously
+        </label>
+
+      </div>
+
+      <button class="submit-btn" id="submitComplaintBtn">
+        Submit Complaint
+      </button>
+
+      <div class="success-message" id="successMessage">
+
+        ✅ Complaint submitted successfully.<br><br>
+
+        Your report has been securely forwarded to the SafeCampus administration system.
+        Thank you for helping create a safer campus environment.
+
+      </div>
+
+    </div>
+
+    <!-- SIDE PANEL -->
+
+    <div class="side-panel">
+
+      <div class="info-card">
+
+        <h3>Why Report Issues?</h3>
+
+        <p>
+          Reporting campus issues allows institutions to take quick actions,
+          improve safety, and create a positive environment for students and staff.
+        </p>
+
+        <img
+          class="info-image"
+          src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop"
+          alt="why report"
+        >
+
+      </div>
+
+      <div class="info-card">
+
+        <h3>How It Works</h3>
+
+        <div class="steps">
+
+          <div class="step">
+
+            <div class="step-number">1</div>
+
+            <p>
+              Fill out the complaint form with complete details.
+            </p>
+
+          </div>
+
+          <div class="step">
+
+            <div class="step-number">2</div>
+
+            <p>
+              Submit anonymously or with your account information.
+            </p>
+
+          </div>
+
+          <div class="step">
+
+            <div class="step-number">3</div>
+
+            <p>
+              The admin reviews and processes the complaint securely.
+            </p>
+
+          </div>
+
+          <div class="step">
+
+            <div class="step-number">4</div>
+
+            <p>
+              Complaint progress and resolution are monitored in analytics.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+
+  <footer>
+    © 2026 SafeCampus — Secure Campus Reporting System
+  </footer>
+
+  <!-- include shared helper (required) -->
+  <script src="app.js"></script>
+
+  <script>
+
+    // Protect page on load: will open login modal or redirect as needed
+    document.addEventListener('DOMContentLoaded', function(){
+      SafeCampusApp.requireAuth('index.html');
+
+      // Pre-fill logged-in user's info (optional)
+      const user = SafeCampusApp.getAuthState();
+      if(user){
+        const emailEl = document.getElementById('emailInput');
+        const nameEl = document.getElementById('fullName');
+        if(emailEl) emailEl.value = user.email;
+        if(nameEl && user.name) nameEl.value = user.name;
+      }
+    });
+
+    function toggleCustomCategory(){
+
+      const category =
+        document.getElementById("categorySelect").value;
+
+      const customBox =
+        document.getElementById("customCategoryBox");
+
+      if(category === "Other"){
+        customBox.style.display = "block";
+      }
+
+      else{
+        customBox.style.display = "none";
+      }
+
+    }
+
+    // Submit complaint: uses SafeCampusApp.saveReport (client-side demo)
+    document.getElementById('submitComplaintBtn').addEventListener('click', function(){
+
+      const user = SafeCampusApp.getAuthState();
+      if(!user){
+        alert('You must sign in with your university account to submit a complaint.');
+        // Open modal or redirect
+        if(typeof openModal === 'function') openModal();
+        else window.location.href = 'index.html';
+        return;
+      }
+
+      const subject = document.getElementById('subjectInput').value.trim();
+      const details = document.getElementById('detailsTextarea').value.trim();
+      let category = document.getElementById('categorySelect').value;
+      const custom = document.getElementById('customCategoryInput').value.trim();
+      const anonymous = document.getElementById('anonymous').checked;
+
+      if(!category){
+        alert('Please select a complaint category.');
+        return;
+      }
+      if(category === 'Other' && custom) category = custom;
+      if(!subject || !details){
+        alert('Please provide a subject and details for the complaint.');
+        return;
+      }
+
+      const report = {
+        id: 'r_' + Date.now(),
+        subject,
+        details,
+        category,
+        isAnonymous: !!anonymous,
+        authorEmail: (anonymous ? 'anonymous' : user.email),
+        status: 'Submitted',
+        createdAt: new Date().toISOString()
+      };
+
+      SafeCampusApp.saveReport(report);
+
+      document.getElementById('successMessage').style.display = "block";
+
+      // Optionally clear some fields while keeping user's email/name
+      document.getElementById('subjectInput').value = '';
+      document.getElementById('detailsTextarea').value = '';
+      document.getElementById('anonymous').checked = false;
+
+      window.scrollTo({
+        top:document.body.scrollHeight,
+        behavior:'smooth'
+      });
+
+    });
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SafeCampus</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* (Your existing CSS — unchanged) */
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Inter',sans-serif;
+    }
+
+    body{
+      background:#f5f7fb;
+      color:#1e293b;
+    }
+
+    nav{
+      width:100%;
+      padding:20px 8%;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background:white;
+      box-shadow:0 4px 20px rgba(0,0,0,0.05);
+      position:sticky;
+      top:0;
+      z-index:1000;
+    }
+
+    .logo{
+      font-size:28px;
+      font-weight:800;
+      color:#2563eb;
+    }
+
+    .nav-links{
+      display:flex;
+      gap:30px;
+      align-items:center;
+    }
+
+    .nav-links a{
+      text-decoration:none;
+      color:#334155;
+      font-weight:500;
+      transition:0.3s;
+    }
+
+    .nav-links a:hover{
+      color:#2563eb;
+    }
+
+    .login-btn, .profile-btn{
+      background:#2563eb;
+      color:white;
+      border:none;
+      padding:12px 24px;
+      border-radius:10px;
+      font-weight:600;
+      cursor:pointer;
+      transition:0.3s;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .login-btn:hover,
+    .profile-btn:hover{
+      background:#1d4ed8;
+      transform:translateY(-2px);
+    }
+
+    .hero{
+      min-height:90vh;
+      padding:80px 8%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:60px;
+      flex-wrap:wrap;
+    }
+
+    .hero-text{
+      flex:1;
+      min-width:300px;
+    }
+
+    .hero-text h1{
+      font-size:64px;
+      line-height:1.1;
+      margin-bottom:24px;
+      font-weight:800;
+    }
+
+    .hero-text h1 span{
+      color:#2563eb;
+    }
+
+    .hero-text p{
+      font-size:18px;
+      color:#475569;
+      line-height:1.8;
+      margin-bottom:30px;
+      max-width:650px;
+    }
+
+    .primary-btn{
+      background:#2563eb;
+      color:white;
+      border:none;
+      padding:16px 30px;
+      border-radius:12px;
+      font-size:16px;
+      font-weight:600;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .primary-btn:hover{
+      transform:translateY(-3px);
+      background:#1d4ed8;
+    }
+
+    .hero img{
+      width:500px;
+      max-width:100%;
+      border-radius:24px;
+      box-shadow:0 15px 40px rgba(0,0,0,0.15);
+    }
+
+    .section{
+      padding:80px 8%;
+    }
+
+    .section-title{
+      text-align:center;
+      margin-bottom:50px;
+    }
+
+    .section-title h2{
+      font-size:42px;
+      color:#0f172a;
+    }
+
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:30px;
+    }
+
+    .card{
+      background:white;
+      border-radius:20px;
+      overflow:hidden;
+      box-shadow:0 10px 30px rgba(0,0,0,0.06);
+      transition:0.3s;
+    }
+
+    .card:hover{
+      transform:translateY(-8px);
+    }
+
+    .card img{
+      width:100%;
+      height:220px;
+      object-fit:cover;
+    }
+
+    .card-content{
+      padding:24px;
+    }
+
+    .card-content h3{
+      margin-bottom:12px;
+      font-size:24px;
+      color:#0f172a;
+    }
+
+    .card-content p{
+      color:#64748b;
+      line-height:1.7;
+    }
+
+    /* ───────── LOGIN MODAL OVERLAY ───────── */
+
+    .modal{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.6);
+      display:none;
+      justify-content:center;
+      align-items:center;
+      z-index:2000;
+      padding:20px;
+    }
+
+    .modal.active{
+      display:flex;
+    }
+
+    /* ───────── NEW SPLIT-SCREEN LOGIN BOX ───────── */
+
+    .modal-box{
+      width:100%;
+      max-width:860px;
+      display:flex;
+      border-radius:24px;
+      overflow:hidden;
+      box-shadow:0 30px 80px rgba(0,0,0,0.25);
+      animation:popup 0.3s ease;
+      position:relative;
+    }
+
+    @keyframes popup{
+      from{ transform:scale(0.88); opacity:0; }
+      to{   transform:scale(1);    opacity:1; }
+    }
+
+    /* ── Left banner ── */
+
+    .modal-banner{
+      position:relative;
+      width:42%;
+      background-image:url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=1200');
+      background-size:cover;
+      background-position:center;
+      padding:44px 36px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      color:#fff;
+      z-index:1;
+    }
+
+    .modal-banner-overlay{
+      position:absolute;
+      inset:0;
+      background:linear-gradient(135deg,rgba(11,60,168,0.95) 0%,rgba(13,44,112,0.9) 100%);
+      z-index:-1;
+    }
+
+    .banner-logo{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .banner-shield{
+      background:rgba(255,255,255,0.15);
+      border:1px solid rgba(255,255,255,0.3);
+      padding:10px;
+      border-radius:12px;
+      font-size:20px;
+      backdrop-filter:blur(4px);
+      border-bottom-left-radius:50% 30%;
+      border-bottom-right-radius:50% 30%;
+    }
+
+    .banner-logo-text h2{
+      font-size:18px;
+      font-weight:700;
+    }
+
+    .banner-logo-text p{
+      font-size:11px;
+      opacity:0.8;
+    }
+
+    .banner-hero h1{
+      font-size:32px;
+      line-height:1.25;
+      margin-bottom:14px;
+      font-weight:700;
+    }
+
+    .banner-hero p{
+      font-size:13px;
+      line-height:1.6;
+      opacity:0.85;
+    }
+
+    .banner-emergency{
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.12);
+      border-radius:14px;
+      padding:14px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      backdrop-filter:blur(10px);
+    }
+
+    .banner-emergency .b-icon{
+      font-size:18px;
+      opacity:0.9;
+    }
+
+    .banner-emergency strong{
+      font-size:13px;
+      display:block;
+      margin-bottom:2px;
+    }
+
+    .banner-emergency span{
+      font-size:11px;
+      opacity:0.75;
+    }
+
+    .sos{
+      color:#ff5252;
+      font-weight:700;
+    }
+
+    /* ── Right form ── */
+
+    .modal-form-side{
+      width:58%;
+      background:#f3f6fc;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:40px 36px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .modal-form-side::before,
+    .modal-form-side::after{
+      content:''; position:absolute; width:90px; height:90px;
+      background-image:radial-gradient(#c8d8ef 2px,transparent 2px);
+      background-size:12px 12px; opacity:0.7;
+    }
+
+    .modal-form-side::before{ top:28px; right:28px; }
+    .modal-form-side::after{  bottom:28px; left:28px; }
+
+    .login-inner{
+      background:#fff;
+      padding:40px 36px;
+      border-radius:20px;
+      width:100%;
+      max-width:420px;
+      box-shadow:0 10px 30px rgba(163,177,198,0.15);
+      position:relative;
+    }
+
+    .close-btn{
+      position:absolute;
+      top:16px;
+      right:16px;
+      background:#f1f5f9;
+      border:none;
+      width:34px;
+      height:34px;
+      border-radius:50%;
+      cursor:pointer;
+      font-size:16px;
+      color:#64748b;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:0.2s;
+    }
+
+    .close-btn:hover{
+      background:#e2e8f0;
+    }
+
+    .login-inner h2{
+      font-size:26px;
+      font-weight:700;
+      color:#0d1e3d;
+      margin-bottom:6px;
+    }
+
+    .login-inner .subtitle{
+      color:#718096;
+      font-size:14px;
+      margin-bottom:28px;
+    }
+
+    /* Tabs */
+    .auth-tabs{
+      display:flex;
+      background:#f1f5f9;
+      border-radius:10px;
+      padding:4px;
+      margin-bottom:24px;
+      gap:4px;
+    }
+
+    .tab-btn{
+      flex:1;
+      padding:10px;
+      border:none;
+      border-radius:8px;
+      font-size:14px;
+      font-weight:600;
+      cursor:pointer;
+      background:transparent;
+      color:#64748b;
+      transition:0.2s;
+    }
+
+    .tab-btn.active{
+      background:#fff;
+      color:#0b3ca8;
+      box-shadow:0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    /* Form inputs */
+    .form-group{
+      margin-bottom:18px;
+    }
+
+    .form-group label{
+      display:block;
+      font-size:12px;
+      font-weight:600;
+      color:#4a5568;
+      margin-bottom:7px;
+    }
+
+    .input-wrapper{
+      position:relative;
+      display:flex;
+      align-items:center;
+    }
+
+    .input-icon{
+      position:absolute;
+      left:14px;
+      color:#a0aec0;
+      font-size:15px;
+    }
+
+    .form-group input{
+      width:100%;
+      padding:13px 14px 13px 44px;
+      border:1px solid #e2e8f0;
+      border-radius:11px;
+      font-size:14px;
+      color:#2d3748;
+      background:#fff;
+      outline:none;
+      transition:0.2s;
+    }
+
+    .form-group input:focus{
+      border-color:#0b3ca8;
+      box-shadow:0 0 0 3px rgba(11,60,168,0.1);
+    }
+
+    .toggle-pw{
+      position:absolute;
+      right:14px;
+      color:#718096;
+      cursor:pointer;
+      font-size:15px;
+      background:none;
+      border:none;
+    }
+
+    .forgot-row{
+      text-align:right;
+      margin-top:-10px;
+      margin-bottom:22px;
+    }
+
+    .forgot-row a{
+      color:#0b3ca8;
+      font-size:12px;
+      font-weight:600;
+      text-decoration:none;
+    }
+
+    .forgot-row a:hover{ text-decoration:underline; }
+
+    .submit-btn{
+      width:100%;
+      padding:14px;
+      background:#0b3ca8;
+      border:none;
+      color:#fff;
+      border-radius:11px;
+      font-size:15px;
+      font-weight:600;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      transition:0.2s;
+    }
+
+    .submit-btn:hover{ background:#092e82; }
+
+    .divider{
+      display:flex;
+      align-items:center;
+      margin:22px 0;
+      color:#a0aec0;
+      font-size:12px;
+    }
+
+    .divider::before,.divider::after{
+      content:''; flex:1; border-bottom:1px solid #e2e8f0;
+    }
+
+    .divider span{ padding:0 12px; }
+
+    .social-row{
+      display:flex;
+      gap:12px;
+      margin-bottom:24px;
+    }
+
+    .btn-social{
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      background:#fff;
+      border:1px solid #e2e8f0;
+      padding:11px;
+      border-radius:11px;
+      font-size:13px;
+      color:#4a5568;
+      font-weight:500;
+      cursor:pointer;
+      transition:0.2s;
+    }
+
+    .btn-social:hover{ background:#f7fafc; }
+
+    .switch-prompt{
+      text-align:center;
+      font-size:13px;
+      color:#4a5568;
+    }
+
+    .switch-prompt a{
+      color:#0b3ca8;
+      font-weight:600;
+      text-decoration:none;
+      cursor:pointer;
+    }
+
+    .switch-prompt a:hover{ text-decoration:underline; }
+
+    .verification-box{
+      margin-top:16px;
+      background:#eff6ff;
+      padding:14px;
+      border-radius:11px;
+      color:#1d4ed8;
+      font-size:13px;
+      display:none;
+      line-height:1.6;
+    }
+
+    /* Secure badge animation */
+    .secure-badge{
+      position:fixed;
+      right:28px;
+      top:84px;
+      background:linear-gradient(135deg,#16a34a,#059669);
+      color:white;
+      padding:12px 16px;
+      border-radius:999px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      box-shadow:0 12px 30px rgba(4,120,87,0.18);
+      transform:translateY(-10px) scale(0.95);
+      opacity:0;
+      z-index:3000;
+      pointer-events:none;
+      transition:transform 0.35s cubic-bezier(.2,.9,.2,1),opacity 0.28s;
+    }
+
+    .secure-badge.show{
+      transform:translateY(0) scale(1);
+      opacity:1;
+    }
+
+    .secure-shield{
+      width:30px; height:30px; display:inline-flex; align-items:center; justify-content:center;
+      background:rgba(255,255,255,0.12); border-radius:8px; font-size:14px;
+    }
+
+    /* FOOTER */
+
+    footer{
+      background:#0f172a;
+      color:white;
+      margin-top:80px;
+      padding:80px 8% 30px;
+    }
+
+    .footer-container{
+      display:grid;
+      grid-template-columns:2fr 1fr 1fr 1.5fr;
+      gap:40px;
+      margin-bottom:50px;
+    }
+
+    .footer-brand h2{
+      font-size:38px;
+      margin-bottom:20px;
+      color:#60a5fa;
+    }
+
+    .footer-brand p{
+      color:#cbd5e1;
+      line-height:1.8;
+      margin-bottom:25px;
+      max-width:400px;
+    }
+
+    .footer-socials{
+      display:flex;
+      gap:15px;
+    }
+
+    .social{
+      width:45px;
+      height:45px;
+      background:#1e293b;
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:0.3s;
+      cursor:pointer;
+      font-size:18px;
+    }
+
+    .social:hover{
+      background:#2563eb;
+      transform:translateY(-4px);
+    }
+
+    .footer-links h3,.footer-contact h3{
+      margin-bottom:22px;
+      font-size:22px;
+    }
+
+    .footer-links a{
+      display:block;
+      text-decoration:none;
+      color:#cbd5e1;
+      margin-bottom:14px;
+      transition:0.3s;
+    }
+
+    .footer-links a:hover{
+      color:#60a5fa;
+      padding-left:6px;
+    }
+
+    .footer-contact p{
+      color:#cbd5e1;
+      margin-bottom:14px;
+      line-height:1.7;
+    }
+
+    .footer-bottom{
+      border-top:1px solid rgba(255,255,255,0.1);
+      padding-top:25px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:15px;
+    }
+
+    .footer-bottom p{
+      color:#94a3b8;
+      font-size:14px;
+    }
+
+    @media(max-width:900px){
+      .hero{ text-align:center; justify-content:center; }
+      .hero-text h1{ font-size:48px; }
+      .footer-container{ grid-template-columns:1fr; }
+      nav{ flex-direction:column; gap:20px; }
+      .nav-links{ flex-wrap:wrap; justify-content:center; }
+      .modal-banner{ display:none; }
+      .modal-form-side{ width:100%; }
+    }
+
+  </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="logo">SafeCampus</div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="complaint.html" id="navComplaintLink" data-protect="auth">Complaint Form</a>
+    <a href="analytics.html">Analytics</a>
+    <a href="contact.html" id="navContactLink" data-protect="auth">Contact Us</a>
+  </div>
+  <button class="login-btn" id="topLoginBtn" onclick="openModal()">Login / Signup</button>
+</nav>
+
+<!-- Secure badge (will appear after login) -->
+<div class="secure-badge" id="secureBadge" aria-hidden="true">
+  <div class="secure-shield"><i class="fa-solid fa-shield-halved"></i></div>
+  <div>
+    <div style="font-weight:700;font-size:14px;">Securely connected</div>
+    <div style="font-size:12px;opacity:0.95;">You're signed in to report safely</div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <h1>Smart <span>Campus Reporting</span> System</h1>
+    <p>
+      SafeCampus helps students and staff report complaints anonymously,
+      monitor campus issues, and improve safety through a secure reporting platform.
+      Users can securely register, verify accounts, submit complaints,
+      and track reports through a modern smart-campus interface.
+    </p>
+    <a href="#" id="reportBtnWrap">
+      <button class="primary-btn" id="reportBtn" onclick="handleReportClick(event)">Report Complaint</button>
+    </a>
+  </div>
+  <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1200&auto=format&fit=crop" alt="Campus image">
+</section>
+
+<!-- FEATURES -->
+<section class="section">
+  <div class="section-title"><h2>Features</h2></div>
+  <div class="cards">
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop" alt="">
+      <div class="card-content">
+        <h3>Anonymous Reporting</h3>
+        <p>Students and staff members can submit complaints securely without revealing their identity.</p>
+      </div>
+    </div>
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1200&auto=format&fit=crop" alt="">
+      <div class="card-content">
+        <h3>Admin Dashboard</h3>
+        <p>Administrators can monitor complaints, manage campus issues, and review reports efficiently.</p>
+      </div>
+    </div>
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1200&auto=format&fit=crop" alt="">
+      <div class="card-content">
+        <h3>Complaint Tracking</h3>
+        <p>Users can track report progress and monitor the resolution status in real-time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── NEW LOGIN MODAL ───────── -->
+<div class="modal" id="loginModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+
+    <!-- Left Banner -->
+    <div class="modal-banner">
+      <div class="modal-banner-overlay"></div>
+
+      <div class="banner-logo">
+        <div class="banner-shield">
+          <i class="fa-solid fa-users-shield"></i>
+        </div>
+        <div class="banner-logo-text">
+          <h2>SafeCampus</h2>
+          <p>Secure. Connect. Protect.</p>
+        </div>
+      </div>
+
+      <div class="banner-hero">
+        <h1>A safer campus<br>for everyone.</h1>
+        <p>Report incidents, get help, and stay informed. Together, we build a safer community.</p>
+      </div>
+
+      <div class="banner-emergency">
+        <div class="b-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <div>
+          <strong>In case of emergency</strong>
+          <span>Call 911 or use the <b class="sos">SOS</b> button in the app.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Form -->
+    <div class="modal-form-side">
+      <div class="login-inner">
+
+        <button class="close-btn" onclick="closeModal()" aria-label="Close">✕</button>
+
+        <h2 id="loginTitle">Welcome back!</h2>
+        <p class="subtitle">Login or create your SafeCampus account</p>
+
+        <!-- Login / Signup Tabs -->
+        <div class="auth-tabs" role="tablist">
+          <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')" role="tab">Login</button>
+          <button class="tab-btn" id="tabSignup" onclick="switchTab('signup')" role="tab">Sign Up</button>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <div id="loginForm">
+          <div class="form-group">
+            <label>Email or Campus ID</label>
+            <div class="input-wrapper">
+              <i class="fa-regular fa-user input-icon"></i>
+              <input type="text" id="loginEmail" placeholder="Enter your email (e.g. name@student.iiu.edu.pk)">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-lock input-icon"></i>
+              <input type="password" id="loginPassword" placeholder="Enter your password">
+              <button class="toggle-pw" onclick="togglePw('loginPassword', this)" type="button">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+          </div>
+          <div class="forgot-row"><a href="#">Forgot password?</a></div>
+
+          <button class="submit-btn" id="loginSubmitBtn">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
+          </button>
+
+          <div class="divider"><span>or continue with</span></div>
+
+          <div class="social-row">
+            <button class="btn-social" id="googleBtn">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/480px-Google_%22G%22_logo.svg.png" alt="Google" width="16"> Continue with Google
+            </button>
+            <button class="btn-social" id="msBtn">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft" width="16"> Continue with Microsoft
+            </button>
+          </div>
+        </div>
+
+        <!-- SIGNUP FORM -->
+        <div id="signupForm" style="display:none;">
+          <div class="form-group">
+            <label>Full Name</label>
+            <div class="input-wrapper">
+              <i class="fa-regular fa-user input-icon"></i>
+              <input type="text" id="signupName" placeholder="Enter your full name">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>University Email</label>
+            <div class="input-wrapper">
+              <i class="fa-regular fa-envelope input-icon"></i>
+              <input type="email" id="signupEmail" placeholder="Enter your university email">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-lock input-icon"></i>
+              <input type="password" id="signupPassword" placeholder="Create a password">
+              <button class="toggle-pw" onclick="togglePw('signupPassword', this)" type="button">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+          </div>
+          <button class="submit-btn" id="signupSubmitBtn">
+            <i class="fa-solid fa-user-plus"></i> Register & Verify
+          </button>
+          <div class="verification-box" id="verificationBox">
+            ✅ Verification email sent successfully.<br>
+            Your SafeCampus account is now active and logged in.
+          </div>
+        </div>
+
+        <p class="switch-prompt" id="switchPrompt">
+          Don't have an account? <a onclick="switchTab('signup')">Sign up</a>
+        </p>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-container">
+    <div class="footer-brand">
+      <h2>SafeCampus</h2>
+      <p>A modern campus reporting platform designed to improve student safety, anonymous complaint handling, and issue resolution through digital transformation.</p>
+      <div class="footer-socials">
+        <div class="social">🌐</div>
+        <div class="social">📧</div>
+        <div class="social">📱</div>
+        <div class="social">💬</div>
+      </div>
+    </div>
+    <div class="footer-links">
+      <h3>Quick Links</h3>
+      <a href="index.html">Home</a>
+      <a href="complaint.html">Complaint Form</a>
+      <a href="analytics.html">Analytics</a>
+      <a href="contact.html">Contact Us</a>
+    </div>
+    <div class="footer-links">
+      <h3>Features</h3>
+      <a href="#">Anonymous Reporting</a>
+      <a href="#">Admin Dashboard</a>
+      <a href="#">Complaint Tracking</a>
+      <a href="#">Campus Analytics</a>
+    </div>
+    <div class="footer-contact">
+      <h3>Contact Information</h3>
+      <p>📍 Iqra University Campus</p>
+      <p>📧 support@safecampus.edu</p>
+      <p>📞 +92 300 1234567</p>
+      <p>🕒 Monday - Friday | 9 AM - 5 PM</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 SafeCampus — All Rights Reserved</p>
+    <p>Built for Secure & Smart Campus Management</p>
+  </div>
+</footer>
+
+<!-- include shared helper -->
+<script src="app.js"></script>
+
+<script>
+  /* Domain mapping and helpers (kept minimal; auth storage handled by app.js globals) */
+  const DOMAIN_MAP = {
+    student: '@student.iiu.edu.pk',
+    staff:   '@staff.iiu.edu.pk',
+    admin:   '@admin.iiu.edu.pk'
+  };
+
+  function getRoleByEmail(email){
+    if(!email || typeof email !== 'string') return null;
+    email = email.toLowerCase().trim();
+    if(email.endsWith(DOMAIN_MAP.student)) return 'student';
+    if(email.endsWith(DOMAIN_MAP.staff))   return 'staff';
+    if(email.endsWith(DOMAIN_MAP.admin))   return 'admin';
+    return null;
+  }
+
+  function updateTopButton(){
+    const user = getAuthState();
+    const top = document.getElementById('topLoginBtn') || document.getElementById('topProfileBtn');
+    // Remove any existing profile menu
+    removeProfileMenu();
+
+    if(user && user.email){
+      // show profile button instead
+      const newBtn = document.createElement('button');
+      newBtn.id = 'topProfileBtn';
+      newBtn.className = 'profile-btn';
+      newBtn.innerHTML = `<i class="fa-solid fa-user"></i> ${user.email.split('@')[0]} <i class="fa-solid fa-caret-down" style="margin-left:6px;font-size:12px;opacity:0.9"></i>`;
+      newBtn.onclick = toggleProfileMenu;
+      if(top && top.parentNode) top.parentNode.replaceChild(newBtn, top);
+      createProfileMenu();
+      showSecureBadge();
+    } else {
+      const newBtn = document.createElement('button');
+      newBtn.className = 'login-btn';
+      newBtn.id = 'topLoginBtn';
+      newBtn.innerText = 'Login / Signup';
+      newBtn.onclick = openModal;
+      if(top && top.parentNode) top.parentNode.replaceChild(newBtn, top);
+      hideSecureBadge();
+    }
+  }
+
+  /* Profile dropdown (simple) */
+  function createProfileMenu(){
+    removeProfileMenu();
+    const btn = document.getElementById('topProfileBtn');
+    if(!btn) return;
+    const menu = document.createElement('div');
+    menu.id = 'profileMenu';
+    menu.style.position = 'absolute';
+    menu.style.top = (btn.getBoundingClientRect().bottom + 8) + 'px';
+    menu.style.right = '6%';
+    menu.style.background = '#fff';
+    menu.style.padding = '12px';
+    menu.style.borderRadius = '10px';
+    menu.style.boxShadow = '0 10px 30px rgba(0,0,0,0.12)';
+    menu.style.minWidth = '220px';
+    menu.style.zIndex = 3500;
+    menu.style.display = 'none';
+
+    const user = getAuthState();
+    menu.innerHTML = `
+      <div style="font-weight:700;margin-bottom:6px;">${user ? user.email : 'Account'}</div>
+      <div style="font-size:13px;color:#555;margin-bottom:12px;">Role: ${user ? user.role : '-'}</div>
+      <button onclick="goToProfile()" style="width:100%;padding:8px;border-radius:8px;border:1px solid #e6eefc;background:#fff;color:#0b3ca8;font-weight:700;cursor:pointer;margin-bottom:8px;">View Profile</button>
+      <button onclick="logout()" style="width:100%;padding:8px;border-radius:8px;border:none;background:#0b3ca8;color:#fff;font-weight:700;cursor:pointer;">Logout</button>
+    `;
+    document.body.appendChild(menu);
+  }
+
+  function removeProfileMenu(){
+    const pm = document.getElementById('profileMenu');
+    if(pm) pm.parentNode.removeChild(pm);
+  }
+
+  function toggleProfileMenu(){
+    const m = document.getElementById('profileMenu');
+    if(!m) createProfileMenu();
+    const menu = document.getElementById('profileMenu');
+    if(!menu) return;
+    menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+  }
+
+  function goToProfile(){
+    const user = getAuthState();
+    if(!user){
+      openModal();
+      return;
+    }
+    window.location.href = 'profile.html';
+  }
+
+  function logout(){
+    clearAuthState();
+    updateTopButton();
+    alert('You have been logged out.');
+    removeProfileMenu();
+  }
+
+  /* Secure badge controls */
+  function showSecureBadge(){
+    const b = document.getElementById('secureBadge');
+    if(!b) return;
+    b.classList.add('show');
+    setTimeout(()=>{ b.classList.remove('show'); }, 4500);
+  }
+  function hideSecureBadge(){
+    const b = document.getElementById('secureBadge');
+    if(b) b.classList.remove('show');
+  }
+
+  /* Modal & tabs & UI helpers (kept from your previous implementation) */
+  function openModal(){
+    document.getElementById("loginModal").classList.add("active");
+    document.getElementById("loginModal").setAttribute('aria-hidden','false');
+  }
+
+  function closeModal(){
+    document.getElementById("loginModal").classList.remove("active");
+    document.getElementById("loginModal").setAttribute('aria-hidden','true');
+    document.getElementById("verificationBox").style.display = "none";
+  }
+
+  function switchTab(tab){
+    const isLogin = tab === 'login';
+    document.getElementById("tabLogin").classList.toggle("active", isLogin);
+    document.getElementById("tabSignup").classList.toggle("active", !isLogin);
+    document.getElementById("loginForm").style.display  = isLogin ? "block" : "none";
+    document.getElementById("signupForm").style.display = isLogin ? "none"  : "block";
+    document.getElementById("switchPrompt").innerHTML   = isLogin
+      ? "Don't have an account? <a onclick=\"switchTab('signup')\">Sign up</a>"
+      : "Already have an account? <a onclick=\"switchTab('login')\">Login</a>";
+    document.getElementById("verificationBox").style.display = "none";
+  }
+
+  function togglePw(inputId, btn){
+    const inp = document.getElementById(inputId);
+    const icon = btn.querySelector('i');
+    if(inp.type === "password"){
+      inp.type = "text";
+      icon.classList.replace("fa-eye","fa-eye-slash");
+    } else {
+      inp.type = "password";
+      icon.classList.replace("fa-eye-slash","fa-eye");
+    }
+  }
+
+  /* Login / Signup (demo behavior) */
+  function socialLoginDemo(provider){
+    const providerName = provider === 'google' ? 'Google' : 'Microsoft';
+    const email = prompt(`Enter your ${providerName} email to continue (demo):`);
+    if(!email) return;
+    const role = getRoleByEmail(email);
+    if(!role){
+      alert("Social login requires a university email with an approved domain (student/staff/admin).");
+      return;
+    }
+    completeLogin({ email: email.toLowerCase(), role: role, name: email.split('@')[0] });
+  }
+
+  function handleLogin(){
+    const email = document.getElementById("loginEmail").value.trim();
+    if(!email){ alert("Please enter your email or campus ID."); return; }
+    const role = getRoleByEmail(email);
+    if(!role){
+      alert("Unrecognized domain. Please use your university email (e.g. name@student.iiu.edu.pk).");
+      return;
+    }
+    // Demo: accept login
+    completeLogin({ email: email.toLowerCase(), role: role, name: email.split('@')[0] });
+  }
+
+  function handleSignup(){
+    const email = document.getElementById("signupEmail").value.trim();
+    if(!email){ alert("Please enter your university email."); return; }
+    const role = getRoleByEmail(email);
+    if(!role){
+      alert("You must register with a university email (student / staff / admin domain).");
+      return;
+    }
+    document.getElementById("verificationBox").style.display = "block";
+    completeLogin({ email: email.toLowerCase(), role: role, name: document.getElementById('signupName').value || email.split('@')[0] });
+  }
+
+  function completeLogin(user){
+    // Save state using app.js helper
+    saveAuthState(user);
+    updateTopButton();
+    showSecureBadge();
+    closeModal();
+
+    // If there's a redirect param in URL, navigate there
+    const params = new URLSearchParams(window.location.search);
+    const redirect = params.get('redirect');
+    if(redirect){
+      // clear query and navigate
+      history.replaceState(null, '', window.location.pathname);
+      window.location.href = redirect;
+    }
+  }
+
+  /* Report button control */
+  function handleReportClick(e){
+    const user = getAuthState();
+    if(!user){
+      e.preventDefault();
+      openModal();
+      alert('Please sign in with your university account to report an issue.');
+      return;
+    }
+    if(!['student','staff','admin'].includes(user.role)){
+      e.preventDefault();
+      alert('Your account is not authorized to submit reports. Use a valid university email.');
+      return;
+    }
+    // navigate to complaint page
+    window.location.href = 'complaint.html';
+  }
+
+  // wire up buttons after DOM ready
+  document.addEventListener('DOMContentLoaded', function(){
+    updateTopButton();
+
+    // attach click handlers to modal buttons (social demo)
+    document.getElementById('googleBtn').addEventListener('click', ()=> socialLoginDemo('google'));
+    document.getElementById('msBtn').addEventListener('click', ()=> socialLoginDemo('microsoft'));
+    document.getElementById('loginSubmitBtn').addEventListener('click', handleLogin);
+    document.getElementById('signupSubmitBtn').addEventListener('click', handleSignup);
+
+    // close profile menu when clicking off
+    window.addEventListener('click', function(ev){
+      const menu = document.getElementById('profileMenu');
+      const btn = document.getElementById('topProfileBtn');
+      if(menu && btn && ev.target !== menu && ev.target !== btn && !btn.contains(ev.target) && !menu.contains(ev.target)){
+        menu.style.display = 'none';
+      }
+    });
+  });
+
+  window.onclick = function(e){
+    const modal = document.getElementById("loginModal");
+    if(e.target === modal) closeModal();
+  }
+
+</script>
+
+</body>
+</html>

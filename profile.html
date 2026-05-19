@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SafeCampus - Profile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body{font-family:Inter, sans-serif;background:#f5f7fb;color:#0f172a;margin:0;}
+    nav{display:flex;justify-content:space-between;align-items:center;padding:18px 6%;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,0.06)}
+    .logo{font-weight:800;color:#2563eb}
+    .container{width:84%;margin:30px auto}
+    .profile-header{display:flex;justify-content:space-between;align-items:center;padding:22px;background:#fff;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.04)}
+    .profile-info{display:flex;gap:18px;align-items:center}
+    .avatar{width:64px;height:64px;border-radius:12px;background:#e6f0ff;color:#0b3ca8;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px}
+    .reports-section{margin-top:22px}
+    .card{background:#fff;padding:18px;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.04);margin-bottom:14px;display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+    .card-left{max-width:78%}
+    .meta{font-size:13px;color:#64748b;margin-bottom:8px}
+    .subject{font-weight:700;font-size:17px;margin-bottom:6px}
+    .details{color:#334155;line-height:1.5}
+    .status{padding:8px 12px;border-radius:999px;font-weight:700}
+    .st-submitted{background:#eff6ff;color:#1d4ed8}
+    .st-investigating{background:#fff7ed;color:#b45309}
+    .st-resolved{background:#dcfce7;color:#15803d}
+    .controls{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+    .btn{padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
+    .btn-delete{background:#fee2e2;color:#991b1b}
+    .btn-edit{background:#eef2ff;color:#3730a3}
+    .select-status{padding:8px;border-radius:8px}
+    .empty{padding:40px;text-align:center;background:#fff;border-radius:12px;color:#64748b}
+    @media(max-width:900px){
+      .card{flex-direction:column}
+      .controls{align-items:flex-start}
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">SafeCampus</div>
+    <div>
+      <a href="index.html" style="text-decoration:none;color:#2563eb;font-weight:700;margin-right:16px">Home</a>
+      <a href="complaint.html" style="text-decoration:none;color:#64748b;margin-right:16px">Submit</a>
+      <button id="logoutBtn" class="btn" style="background:#0b3ca8;color:#fff;border-radius:8px;padding:8px 12px">Logout</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="profile-header">
+      <div class="profile-info">
+        <div id="avatar" class="avatar">U</div>
+        <div>
+          <div id="userEmail" style="font-weight:800;font-size:18px"></div>
+          <div id="userRole" style="color:#64748b;font-size:13px"></div>
+        </div>
+      </div>
+      <div>
+        <div style="text-align:right;color:#64748b;font-size:13px">Member since: <span id="memberSince">-</span></div>
+      </div>
+    </div>
+
+    <div class="reports-section">
+      <h2 style="margin:18px 0 12px">My Reports</h2>
+      <div id="reportsList"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    (function(){
+      const user = SafeCampusApp.requireAuth('index.html'); // redirects if not logged in
+      if(!user) return;
+
+      // header
+      document.getElementById('userEmail').innerText = user.email;
+      document.getElementById('userRole').innerText = 'Role: ' + (user.role || 'user');
+      document.getElementById('avatar').innerText = (user.name || user.email.split('@')[0])[0].toUpperCase();
+      document.getElementById('memberSince').innerText = new Date().toLocaleDateString();
+
+      document.getElementById('logoutBtn').addEventListener('click', function(){
+        sessionStorage.removeItem('safecampus_user');
+        window.location.href = 'index.html';
+      });
+
+      function renderReports(){
+        const all = SafeCampusApp.getReports();
+        let visible = [];
+        if(user.role === 'admin' || user.role === 'staff'){
+          visible = all;
+        } else {
+          visible = all.filter(r => r.authorEmail === user.email);
+        }
+
+        const container = document.getElementById('reportsList');
+        container.innerHTML = '';
+        if(visible.length === 0){
+          container.innerHTML = '<div class="empty">No reports found. Submit your first report from the complaint form.</div>';
+          return;
+        }
+
+        visible.forEach(r => {
+          const card = document.createElement('div');
+          card.className = 'card';
+
+          const left = document.createElement('div');
+          left.className = 'card-left';
+
+          const meta = document.createElement('div');
+          meta.className = 'meta';
+          meta.innerText = `${new Date(r.createdAt).toLocaleString()} • Category: ${r.category} • ${r.isAnonymous ? 'Anonymous' : 'Identified'}`;
+
+          const subj = document.createElement('div');
+          subj.className = 'subject';
+          subj.innerText = r.subject;
+
+          const details = document.createElement('div');
+          details.className = 'details';
+          details.innerText = r.details;
+
+          left.appendChild(meta);
+          left.appendChild(subj);
+          left.appendChild(details);
+
+          const controls = document.createElement('div');
+          controls.className = 'controls';
+
+          const statusBadge = document.createElement('div');
+          statusBadge.className = 'status ' + (r.status === 'Resolved' ? 'st-resolved' : r.status === 'Investigating' ? 'st-investigating' : 'st-submitted');
+          statusBadge.innerText = r.status;
+
+          controls.appendChild(statusBadge);
+
+          // status selector for staff/admin
+          if(user.role === 'admin' || user.role === 'staff'){
+            const sel = document.createElement('select');
+            sel.className = 'select-status';
+            ['Submitted','Investigating','Resolved'].forEach(s => {
+              const opt = document.createElement('option');
+              opt.value = s;
+              opt.innerText = s;
+              if(s === r.status) opt.selected = true;
+              sel.appendChild(opt);
+            });
+            sel.addEventListener('change', function(){
+              SafeCampusApp.updateReport(r.id, { status: sel.value });
+              renderReports();
+            });
+            controls.appendChild(sel);
+          }
+
+          // delete button (owner or admin/staff)
+          const canDelete = (r.authorEmail === user.email) || (user.role === 'admin' || user.role === 'staff');
+          if(canDelete){
+            const del = document.createElement('button');
+            del.className = 'btn btn-delete';
+            del.innerText = 'Delete';
+            del.addEventListener('click', function(){
+              if(confirm('Delete this report?')) {
+                SafeCampusApp.deleteReport(r.id);
+                renderReports();
+              }
+            });
+            controls.appendChild(del);
+          }
+
+          card.appendChild(left);
+          card.appendChild(controls);
+          container.appendChild(card);
+        });
+      }
+
+      renderReports();
+
+    })();
+  </script>
+</body>
+</html>
